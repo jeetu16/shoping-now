@@ -30,7 +30,11 @@ const productSchema = new mongoose.Schema(
                     required: [true, "You have to provide atleast one Image"]
                 }
             }
-        ]
+        ],
+        categoryId : {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Categorie"
+        }
     },
     {timestamps:true}
 )

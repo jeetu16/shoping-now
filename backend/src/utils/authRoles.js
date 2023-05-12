@@ -1,7 +1,7 @@
 const authRoles = {
-    "ADMIN": 700,
-    "EDITOR": 800,
-    "USER": 100
+    "ADMIN": "ADMIN",
+    "EDITOR": "EDITOR",
+    "USER": "USER"
 }
 
 export default authRoles;

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import AuthRoles from '../utils/authRoles.js'
+import authRoles from '../utils/authRoles.js'
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import config from '../config/index.js';
@@ -37,8 +37,8 @@ const userSchema = new mongoose.Schema(
         },
         roles: {
             type: String,
-            enum: Object.values(AuthRoles),
-            default: AuthRoles.ADMIN
+            enum: Object.values(authRoles),
+            default: authRoles.ADMIN
         },
         forgotPasswordToken: String,
         forgotPasswordExpiry: Date
