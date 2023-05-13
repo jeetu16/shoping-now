@@ -31,7 +31,6 @@ const userSchema = new mongoose.Schema(
         },
         mobileNumber: {
             type: Number,
-            required: [true, "Mobile number must be required"],
             max: [10, "Mobile number must be 10 digits"],
             min: [10, "Mobile number must be 10 digits"]
         },
@@ -48,7 +47,7 @@ const userSchema = new mongoose.Schema(
 
 // encrypting password before saving
 userSchema.pre('save', async function (next) {
-    if (this.isModified('password')) return next();
+    if (!this.isModified('password')) return next();
     this.password = await bcrypt.hash(this.password, 10);
     next();
 })
@@ -56,12 +55,12 @@ userSchema.pre('save', async function (next) {
 userSchema.methods = {
     // comparing password with entered password
     comparePassword: async function (enteredPassword) {
-        return await bcrypt(enteredPassword, this.password);
+        return await bcrypt.compare(enteredPassword, this.password);
     },
 
     // generating jwt token for user
     generateJWTtoken: function () {
-        jwt.sign(
+        return jwt.sign(
             { _id: this._id, roles: this.roles },
             config.JWT_SECRET_KEY,
             { expiresIn: config.JWT_EXPIRY }
