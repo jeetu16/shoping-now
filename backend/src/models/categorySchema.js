@@ -13,7 +13,7 @@ const categoriesSchema = new mongoose.Schema(
             {
                 secure_url: {
                     type: String,
-                    required: [true, "You have to upload a photo"]
+                    // required: [true, "You have to upload a photo"]
                 }
             }
         ]

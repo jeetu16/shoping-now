@@ -33,7 +33,7 @@ export const authorize = (...allowedRoles) => asyncHandler(async(req,res,next) =
     const result = req.user.roles.map(role => allowedRoles.includes(role)).find(val => val===true);
 
     if(!result) {
-        throw new CustomError("Unauthorized to access", 401)
+        throw new CustomError("Unauthorized to access", 403)
     }
     next();
 })
