@@ -6,7 +6,6 @@ import fs from "fs";
 import Product from "../models/productSchema.js";
 import Mongoose from "mongoose";
 import { s3DeleteFile, s3UploadFile } from '../service/s3ImageHandler.js'
-import { log } from "console";
 
 
 export const addProduct = asyncHandler(async (req, res) => {
@@ -21,20 +20,15 @@ export const addProduct = asyncHandler(async (req, res) => {
 
         console.log(fields, files);
 
-        if (
-            !fields.name ||
-            !fields.price
-        ) {
-            throw new CustomError("Please fill all the fields", 500)
-
+        if ( !fields.name || !fields.price ) {
+            throw new CustomError("Please fill all the fields", 500);
         }
-
-
 
         let imgArrayResp = Promise.all(
             Object.keys(files).map(async (fileKey, index) => {
+                console.log(fileKey);
                 const element = files[fileKey];
-                console.log("ELEMENT",element);
+                console.log("ELEMENT");
                 const data = fs.readFileSync(element.filepath)
                 console.log(`File Path: ${element.filepath}`);
 
@@ -44,10 +38,6 @@ export const addProduct = asyncHandler(async (req, res) => {
                     body: data,
                     contentType: element.mimetype
                 })
-
-                // productId = 123abc456
-                // 1: products/123abc456/photo_1.png
-                // 2: products/123abc456/photo_2.png
 
                 console.log("UPLOAD: ",upload);
                 return {
