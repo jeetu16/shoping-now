@@ -13,5 +13,5 @@ export const s3DeleteFile = async ({ bucketName, key }) => {
     return await s3.deleteObject({
         Bucket: bucketName,
         Key: key
-    })
+    }).promise();
 }
