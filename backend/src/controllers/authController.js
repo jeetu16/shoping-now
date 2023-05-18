@@ -1,6 +1,7 @@
 import User from '../models/userSchema.js';
 import asyncHandler from '../service/asyncHandler.js'
 import CustomError from '../service/CustomError.js';
+import sendMailToUser from '../service/sendMailService.js';
 
 
 // defined cookie options object for user cookie
@@ -87,7 +88,7 @@ export const login = asyncHandler(async(req,res) => {
 
 
 export const logout = asyncHandler(async(req,res) => {
-    res.cookie("token", null, "user",{
+    res.cookie("token", null, {
         expires: new Date(Date.now()),
         httpOnly: true
     });
@@ -97,4 +98,55 @@ export const logout = asyncHandler(async(req,res) => {
         message: "Successfully logged out"
     });
 });
+
+
+export const forgotPassword = asyncHandler(async(req,res) => {
+    const { email } = req.body;
+
+    if(!email) {
+        throw new CustomError("Please provide email",400);
+    }
+
+    const user = await User.findOne({email});
+
+    if(!user) {
+        throw new CustomError("Not found user",404);
+    }
+
+    const resetToken = user.generateForgotPasswordToken();
+
+    await user.save({validateBeforeSave: false});
+
+    const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/password/reset/${resetToken}`;
+
+    const message = `Your password reset link is as follows  \n\n ${resetUrl} \n\n If this was not requested by you, please ignore this..`;
+    try {
+        await sendMailToUser({
+          email: user.email,
+          subject: "Password reset mail",
+          message  
+        })
+    } catch (error) {
+        user.forgotPasswordToken = undefined;
+        user.forgotPasswordExpiry = undefined;
+
+        user.save({validateBeforeSave: false});
+
+        throw new CustomError(error.message || "Email could not be sent", 500)
+    }
+
+})
+
+
+
+export const resetPassword = asyncHandler(async(req,res) => {
+    const {password, confirmPassword} = req.body;
+    const {token: resetToken} = req.params;
+
+    if(!token ||!password || !confirmPassword) {
+        throw new CustomError("Please provide password")
+    }
+})
+
+
 

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { login, logout, signUp } from '../controllers/authController.js';
+import { forgotPassword, login, logout, resetPassword, signUp } from '../controllers/authController.js';
 
 const router = Router();
 
@@ -12,6 +12,12 @@ router.post('/login', login);
 
 // Logout User
 router.get('/logout', logout);
+
+// Forgot password of user route
+router.post('/password/forgot',forgotPassword);
+
+// reset password route
+router.post('/reset',resetPassword);
 
 
 export default router;
