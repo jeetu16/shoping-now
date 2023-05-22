@@ -2,6 +2,7 @@ import User from '../models/userSchema.js';
 import asyncHandler from '../service/asyncHandler.js'
 import CustomError from '../service/CustomError.js';
 import sendMailToUser from '../service/sendMailService.js';
+import crypto from 'crypto';
 
 
 // defined cookie options object for user cookie
@@ -144,8 +145,38 @@ export const resetPassword = asyncHandler(async(req,res) => {
     const {token: resetToken} = req.params;
 
     if(!token ||!password || !confirmPassword) {
-        throw new CustomError("Please provide password")
+        throw new CustomError("Please provide password", 400);
     }
+
+    if(password!==confirmPassword) {
+        throw new CustomError("Your password is incorrect",406);
+    }
+
+    const resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    const user = await User.findOne({
+        forgotPasswordToken:resetPasswordToken,
+        forgotPasswordExpiry: {$gt: Date.now() }
+    });
+
+    if(!user) {
+        throw new CustomError("Invalid token",406);
+    }
+
+    user.password = password;
+    user.forgotPasswordToken = undefined;
+    user.forgotPasswordExpiry = undefined;
+
+    await user.save();
+
+    const token  = user.generateJWTtoken();
+    res.cookie("jwt", token, cookieOptions);
+
+    res.status(200).json({
+        success:true,
+        user
+    })
+
 })
 
 
