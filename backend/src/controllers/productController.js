@@ -8,14 +8,20 @@ import mongoose from "mongoose";
 
 export const addProduct = asyncHandler(async (req, res) => {
 
+    console.log("one");
+
     // file upload using express-fileupload package
     if (!req.body.name || !req.body.price) {
         throw new CustomError("Please fill all the fields", 400);
     }
 
+    console.log("two");
+
     if (!req.files) {
         throw new CustomError("File is missing", 400)
     }
+
+    console.log("three");
     const files = req.files;
 
     const productId = new mongoose.Types.ObjectId().toHexString();
@@ -29,7 +35,6 @@ export const addProduct = asyncHandler(async (req, res) => {
                 key: `products/${productId}/photo_${index + 1}.jpg`,
                 body: element.data,
                 contentType: element.mimetype,
-                ACL: "public-read"
             })
             console.log("Upload: ", upload);
 

@@ -4,6 +4,7 @@ import config from "./config/index.js";
 ( async()=> {
 
     try {
+        mongoose.set('strictQuery', true);
         mongoose.connect(config.MONGO_DB_URL);
         console.log("Database successfully connected")
 

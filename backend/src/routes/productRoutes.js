@@ -5,15 +5,15 @@ import fileUpload from 'express-fileupload';
 const router = Router();
 
 // Get all products
-router.get("", getAllProducts);
+router.get("/get_products", getAllProducts);
 
 // Get all products
-router.get("/:id", getProduct);
+router.get("/get_product/:id", getProduct);
 
 // Add product
-router.post("",fileUpload({createParentPath:true}),addProduct);
+router.post("/add_product",fileUpload({createParentPath:true}),addProduct);
 
-// Get all products
-router.delete("/:id", deleteProducts);
+// Delete product
+router.delete("/delete_product/:id", deleteProducts);
 
 export default router;
