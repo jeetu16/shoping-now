@@ -14,10 +14,10 @@ router.post('/login', login);
 router.get('/logout', logout);
 
 // Forgot password of user route
-router.post('/password/forgot',forgotPassword);
+router.post('/password/forgot', forgotPassword);
 
 // reset password route
-router.post('/reset',resetPassword);
+router.post('/reset/:token', resetPassword);
 
 
 export default router;
