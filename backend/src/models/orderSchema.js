@@ -3,7 +3,7 @@ import orderStatus from '../utils/orderStatus.js';
 
 const orderSchema = new mongoose.Schema(
     {
-        product: {
+        products: {
             type: [
                 {
                     productId: {
@@ -22,15 +22,7 @@ const orderSchema = new mongoose.Schema(
             required: [true, "You have to provide user details"]
         },
         address: {
-            type: [
-                {
-                    buildingOrStreetNumber: Number,
-                    area: String,
-                    city: String,
-                    pincode: Number,
-                    state: String
-                }
-            ],
+            type: String,
             required: [true, "You have to provide address"]
         },
         phoneNumber: {
@@ -39,10 +31,6 @@ const orderSchema = new mongoose.Schema(
         },
         totalAmount: {
             type: Number,
-            required: true
-        },
-        paymentMode: {
-            type: String,
             required: true
         },
         status: {
